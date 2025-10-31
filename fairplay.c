@@ -19,7 +19,7 @@
     _exit (1);                            \
   } while (0)
 
-static FILE *log = NULL;
+static FILE *log_fd = NULL;
 
 static inline uint32_t bswap32 (uint32_t value) {
   return ((value & 0xFF000000) >> 24) | ((value & 0x00FF0000) >> 8) |
@@ -27,17 +27,17 @@ static inline uint32_t bswap32 (uint32_t value) {
 }
 
 void console (const char *key, const char *value, ...) {
-  if (!log)
+  if (!log_fd)
     return;
 
   va_list fmt;
 
-  fprintf (log, "%-14s", key);
+  fprintf (log_fd, "%-14s", key);
   va_start (fmt, value);
-  vfprintf (log, value, fmt);
+  vfprintf (log_fd, value, fmt);
   va_end (fmt);
-  fprintf (log, "\n");
-  fflush (log);
+  fprintf (log_fd, "\n");
+  fflush (log_fd);
 }
 
 void decrypt (const char *path, const struct mach_header *mh) {
@@ -120,7 +120,8 @@ void decrypt (const char *path, const struct mach_header *mh) {
         ERROR ("unknown type of executable");
       }
 
-      strlcpy (out_path, "/var/mobile/Documents/", sizeof (out_path));
+      strlcpy (out_path, getenv ("HOME"), sizeof (out_path));
+      strlcat (out_path, "/tmp/", sizeof (out_path));
       strlcat (out_path, str_tmp + 1, sizeof (out_path));
       strlcat (out_path, ".d", sizeof (out_path));
 
@@ -195,8 +196,13 @@ static void queue (const struct mach_header *mh, intptr_t slide) {
 __attribute__ ((constructor)) static void dump () {
   printf ("decrypting Mach-O image encrypted by FairPlay DRM...\n");
 
-  if (!log)
-    log = fopen ("/var/mobile/Library/fairplay.log", "w");
+  char log_path[4096];
+
+  strlcpy (log_path, getenv ("HOME"), sizeof (log_path));
+  strlcat (log_path, "/tmp/fairplay.log", sizeof (log_path));
+
+  if (!log_fd)
+    log_fd = fopen (log_path, "w");
 
   _dyld_register_func_for_add_image (&queue);
 }
