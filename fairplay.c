@@ -86,7 +86,7 @@ void decrypt (const char *path, const struct mach_header *mh) {
       }
 
       off_cid = ((unsigned char *) &eic->cryptid - (unsigned char *) mh);
-      console ("cryptid offset", "%x", off_cid);
+      console ("found", "cryptid at offset %x", off_cid);
 
       in_fd = open (in_path, O_RDONLY);
       if (in_fd == -1)
