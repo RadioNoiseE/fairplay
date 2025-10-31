@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <syslog.h>
 #include <unistd.h>
 
 #define WARNING(...) console ("warning", __VA_ARGS__)
@@ -24,15 +25,13 @@ static inline uint32_t bswap32 (uint32_t value) {
 }
 
 void console (const char *key, const char *value, ...) {
+  char    msg[4096];
   va_list fmt;
 
-  printf ("%-*s", 14, key);
-
   va_start (fmt, value);
-  vprintf (value, fmt);
+  vsnprintf (msg, sizeof (msg), value, fmt);
+  syslog (LOG_NOTICE, "%-*s%s", 14, key, msg);
   va_end (fmt);
-
-  printf ("\n");
 }
 
 void decrypt (const char *path, const struct mach_header *mh) {
