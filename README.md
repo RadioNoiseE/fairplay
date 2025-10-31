@@ -9,9 +9,10 @@ loading (dyld rejects non-platform frameworks with "mapping process is
 a platform binary, but mapped file is not"). Thus I adapted this tool
 to run as a MobileSubstrate/ElleKit injected dynamic library.
 
-To compile, adjust the makefile so the SDK version matches your target
-device. After obtaining the resulting `fairplay.dylib`, transfer it to
-your jailbroken device, and install it with `fairplay.plist`.
+To compile, adjust the makefile so the SDK version and architecture
+matches your target device. After obtaining the resulting
+`fairplay.dylib`, ad-hoc sign it, then copy it to your jailbroken
+device, and install it with the accompanying `fairplay.plist`.
 
 Due to sandbox restrictions, files are written to `tmp/` in the app
 container root. Dumped images have a `.d` suffix and log is written to
