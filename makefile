@@ -1,7 +1,7 @@
-SDK          =`xcrun --sdk iphoneos --show-sdk-path`
-GCC_BIN      =`xcrun --sdk iphoneos --find gcc`
-GCC_BASE     = $(GCC_BIN) -Os $(CFLAGS) -Wimplicit -isysroot $(SDK) -F$(SDK)/System/Library/Frameworks
-GCC_UNIVERSAL=$(GCC_BASE) -arch arm64
+SDK          :=`xcrun --sdk iphoneos --show-sdk-path`
+GCC_BIN      :=`xcrun --sdk iphoneos --find gcc`
+GCC_BASE     :=$(GCC_BIN) -Os $(CFLAGS) -Wimplicit -isysroot $(SDK) -F$(SDK)/System/Library/Frameworks
+GCC_UNIVERSAL:=$(GCC_BASE) -arch arm64
 
 all: fairplay.dylib
 
