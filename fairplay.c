@@ -145,7 +145,7 @@ void decrypt (const char *path, const struct mach_header *mh) {
       if (pos_tmp != eic->cryptsize)
         ERROR ("failed writing file");
 
-      int_tmp = off_read;
+      int_tmp = off_rest;
       lseek (in_fd, eic->cryptsize, SEEK_CUR);
 
       console ("copying", "not encrypted remainder");
